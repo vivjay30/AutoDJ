@@ -1,0 +1,20 @@
+[
+	{
+		"Name" : "Alive",
+		"File" : "Alive.mp3",
+		"MixIn" : 32,
+		"MixOut" : 64,
+		"Unary" : 50,
+		"SongId" : 1,
+		"BPM" : 128
+	},
+	{
+		"Name" : "Bastille",
+		"File" : "Bastille.mp3",
+		"MixIn" : 32,
+		"MixOut" : 64,
+		"Unary" : 75,
+		"SongId" : 2,
+		"BPM" : 128
+	}
+]
