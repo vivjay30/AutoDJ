@@ -2,17 +2,26 @@
 	{
 		"Name" : "Alive",
 		"File" : "Alive.mp3",
-		"MixIn" : 32,
-		"MixOut" : 64,
+		"MixIn" : 224,
+		"MixOut" : 256,
 		"Unary" : 50,
 		"SongId" : 1,
 		"BPM" : 128
 	},
 	{
+		"Name" : "Like a Lie",
+		"File" : "LikeaLie.mp3",
+		"MixIn" : 31,
+		"MixOut" : 95,
+		"Unary" : 75,
+		"SongId" : 2,
+		"BPM" : 128
+	},
+	{
 		"Name" : "Bastille",
 		"File" : "Bastille.mp3",
-		"MixIn" : 32,
-		"MixOut" : 64,
+		"MixIn" : 92,
+		"MixOut" : 150,
 		"Unary" : 75,
 		"SongId" : 2,
 		"BPM" : 128
