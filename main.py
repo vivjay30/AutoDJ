@@ -5,6 +5,8 @@ import dirac
 import json
 import itertools
 
+# minimum threshold value for unary factor and mashability
+THRESHOLD = 0.2
 
 # This is a dict of dicts storing how well key1 mashes out into key2
 MASHABILITY_DICT = {}
@@ -23,14 +25,102 @@ class Song(object):
 		self.song_id = song_id
 		self.bpm = bpm
 		self.AudioFile = audio.LocalAudioFile("mp3/" + fname)
+		
+def get_mash_pairs(N_list):
+    mash_dict = {}
+    all_pairs = list(itertools.combinations(N_list, 2))
+    for song_pair in all_pairs:
+        rand_mash = mashability(song_pair[0], song_pair[1])
+        mash_dict[song_pair] = rand_mash
+        mash_dict[(song_pair[1],song_pair[0])] = rand_mash
+    return mash_dict
 
-def mashability(song1, song2):
-	"""
-	Returns how well song1 transitions into song2 using cosine matrix similarity
-	and FFT semitone bin approximation matrices
-	"""
-	# Need to implement
-	return 1
+
+# takes a list of two song id and returns a number between zero and 1
+def mashability (song1_id, song2_id):
+    return round(random.random(),2)
+
+    
+def get_unary_list(N):
+    return [mashability(1, 2) for i in range(N)]
+
+# returns the next best song in the domain
+def get_best_next_song(mix, domain, mashPairs, unaryVals,v):
+    for i in domain[v]:
+            
+        # if all constraints satisfied return the next song
+        if not(i in mix[:v] or mashPairs[(mix[v-1],i)] < THRESHOLD or unaryVals[i] < THRESHOLD):
+            return i
+    return -1
+
+# pick the next unassigned variable
+def pickUnassignedVariable(mix):
+    for i in range(0, len(mix)):
+        if mix[i] == -1:
+            return i
+
+# pick the first best song in the mix
+def pickFirstSong(domain, unaryVals):
+    factor = float("-inf")
+    result = 0
+    for i in domain[0]:
+         if unaryVals[i] > factor:
+             factor = unaryVals[i]
+             result = i
+    return result
+    
+
+# Given a song id list, all mash pairs, unary vals, and the number
+# of mixes to generate, returns the mix with all song ids as a list
+def generateMix (songList, numMixes, mashPairs, unaryVals):
+    domain = {}
+    for i in range(numMixes):
+        domain[i] = songList
+    mix = [-1 for j in range(numMixes)]
+    return backTrack (mix, domain, mashPairs, unaryVals)
+
+
+
+#backtracking algorithm with forward searching for our csp
+def backTrack (mix, domain, mashPairs, unaryVals):
+    # all slots have been assigned with song ids
+    if mix[len(mix) - 1] != -1:
+        return mix
+
+    else:
+        # pick the next unassigned variable
+        v = pickUnassignedVariable(mix)
+
+        #no possible assignments
+        if len(domain[v]) == 0: 
+            return False
+
+        # put the best song in the first slot and backtrack           
+        if v == 0:
+            mix[v] = pickFirstSong(domain, unaryVals)
+            return backTrack(mix, domain, mashPairs, unaryVals)
+            
+        # get the next best song given the current assignment           
+        i = get_best_next_song(mix, domain, mashPairs, unaryVals, v)
+
+        #if no value meets constraint
+        if i == -1:
+            # prune the domain to not have the previous song
+            new_domain = domain[v-1][:]
+            new_domain.remove(mix[v-1])
+            domain[v-1] = new_domain
+
+            # backtrack on the same variable with the updated
+            # domain
+            mix[v-1] = -1
+            return backTrack(mix, domain, mashPairs, unaryVals)
+        else:
+            # assign a song id to the slot and backtrack
+            mix[v] = i
+            return backTrack(mix, domain, mashPairs, unaryVals)
+
+    return False
+ 
 
 
 def renderList(songList, outFile):
@@ -99,9 +189,9 @@ def main():
 				new_dict[song2] = mashability(song1, song2)
 		MASHABILITY_DICT[song1] = new_dict
 
-	from csp import genMix
+	#from csp import genMix
 	# Use a CSP to solve generate a list of songs
-	mixList = genMix(songs, MASHABILITY_DICT)
+	#mixList = genMix(songs, MASHABILITY_DICT)
 
 	# Actually render the list to a file
 	renderList(mixList, "MixOut.mp3")
