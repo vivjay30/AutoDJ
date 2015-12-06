@@ -4,9 +4,14 @@ import echonest.remix.modify as modify
 import dirac
 import json
 import itertools
+from pyechonest import config
+import random
+import librosa
+import numpy as np
+import scipy.spatial.distance as dst
 
-# minimum threshold value for unary factor and mashability
-THRESHOLD = 0.2
+config.ECHO_NEST_API_KEY = "O63DZS2LNNEWUO9GC"
+
 
 # This is a dict of dicts storing how well key1 mashes out into key2
 MASHABILITY_DICT = {}
@@ -24,104 +29,59 @@ class Song(object):
 		self.unary_factor = unary_factor
 		self.song_id = song_id
 		self.bpm = bpm
+		print "About to try to load"
 		self.AudioFile = audio.LocalAudioFile("mp3/" + fname)
+		print "Done loading"
+
+	def __repr__(self):
+		return self.name
 		
-def get_mash_pairs(N_list):
-    mash_dict = {}
-    all_pairs = list(itertools.combinations(N_list, 2))
-    for song_pair in all_pairs:
-        rand_mash = mashability(song_pair[0], song_pair[1])
-        mash_dict[song_pair] = rand_mash
-        mash_dict[(song_pair[1],song_pair[0])] = rand_mash
-    return mash_dict
+def get_mash_pairs(songs):
+	mash_dict = {}
+	for song1 in songs:
+		for song2 in songs:
+			if song1 != song2:
+				mash_dict[(song1, song2)] = mashability(song1, song2)
+	print mash_dict
+	return mash_dict
 
 
 # takes a list of two song id and returns a number between zero and 1
-def mashability (song1_id, song2_id):
-    return round(random.random(),2)
+def mashability(song1, song2):
+	"""
+	Returns how well song1 transitions into song2 using cosine matrix similarity
+	and FFT semitone bin approximation matrices
+	"""
+	sample_length = MIX_LENGTH #beats per sample
+	beats1 = song1.AudioFile.analysis.beats[song1.mix_out:song1.mix_out + sample_length]
+	beats2 = song2.AudioFile.analysis.beats[song1.mix_in:song1.mix_in + sample_length]
+	data1 = audio.getpieces(song1.AudioFile, beats1)
+	data2 = audio.getpieces(song2.AudioFile, beats2)
+	data1.encode("temp1.mp3")
+	data2.encode("temp2.mp3")
+	print "Done encoding"
+	y1, sr1 = librosa.load("temp1.mp3")
+	y2, sr2 = librosa.load("temp2.mp3")
+	print "Done loading"
+	S1 = np.abs(librosa.stft(y1, n_fft = 4096))
+	chroma1 = librosa.feature.chroma_stft(S=S1, sr=sr1)
+	S2 = np.abs(librosa.stft(y2, n_fft = 4096))
+	chroma2 = librosa.feature.chroma_stft(S=S2, sr=sr2)
 
-    
-def get_unary_list(N):
-    return [mashability(1, 2) for i in range(N)]
-
-# returns the next best song in the domain
-def get_best_next_song(mix, domain, mashPairs, unaryVals,v):
-    for i in domain[v]:
-            
-        # if all constraints satisfied return the next song
-        if not(i in mix[:v] or mashPairs[(mix[v-1],i)] < THRESHOLD or unaryVals[i] < THRESHOLD):
-            return i
-    return -1
-
-# pick the next unassigned variable
-def pickUnassignedVariable(mix):
-    for i in range(0, len(mix)):
-        if mix[i] == -1:
-            return i
-
-# pick the first best song in the mix
-def pickFirstSong(domain, unaryVals):
-    factor = float("-inf")
-    result = 0
-    for i in domain[0]:
-         if unaryVals[i] > factor:
-             factor = unaryVals[i]
-             result = i
-    return result
-    
-
-# Given a song id list, all mash pairs, unary vals, and the number
-# of mixes to generate, returns the mix with all song ids as a list
-def generateMix (songList, numMixes, mashPairs, unaryVals):
-    domain = {}
-    for i in range(numMixes):
-        domain[i] = songList
-    mix = [-1 for j in range(numMixes)]
-    return backTrack (mix, domain, mashPairs, unaryVals)
+	orthogonal_arr = []
+	for i in range(min(chroma1.shape[1],chroma2.shape[1])):
+		orthogonal_arr.append(dst.cosine(chroma1[:,i],chroma2[:,i]))
+	return sum(orthogonal_arr)/len(orthogonal_arr)
 
 
-
-#backtracking algorithm with forward searching for our csp
-def backTrack (mix, domain, mashPairs, unaryVals):
-    # all slots have been assigned with song ids
-    if mix[len(mix) - 1] != -1:
-        return mix
-
-    else:
-        # pick the next unassigned variable
-        v = pickUnassignedVariable(mix)
-
-        #no possible assignments
-        if len(domain[v]) == 0: 
-            return False
-
-        # put the best song in the first slot and backtrack           
-        if v == 0:
-            mix[v] = pickFirstSong(domain, unaryVals)
-            return backTrack(mix, domain, mashPairs, unaryVals)
-            
-        # get the next best song given the current assignment           
-        i = get_best_next_song(mix, domain, mashPairs, unaryVals, v)
-
-        #if no value meets constraint
-        if i == -1:
-            # prune the domain to not have the previous song
-            new_domain = domain[v-1][:]
-            new_domain.remove(mix[v-1])
-            domain[v-1] = new_domain
-
-            # backtrack on the same variable with the updated
-            # domain
-            mix[v-1] = -1
-            return backTrack(mix, domain, mashPairs, unaryVals)
-        else:
-            # assign a song id to the slot and backtrack
-            mix[v] = i
-            return backTrack(mix, domain, mashPairs, unaryVals)
-
-    return False
- 
-
+def get_unary_list(songs):
+	"""
+	Takes in a list of songs, and returns a dict where their ID is mapped to their unary value
+	"""
+	ret = {}
+	for song in songs:
+		ret[song.song_id] = song.unary_factor
+	return ret
 
 def renderList(songList, outFile):
 	"""
@@ -148,7 +108,7 @@ def renderList(songList, outFile):
 			mixInSeg.encode("Mixinseg.mp3")
 			mixOutSeg.encode("MixOutseg.mp3")
 			print transition_length
-			transitionSeg = action.Crossfade([mixOutSeg, mixInSeg], [0.0, 0.0], transition_length).render()
+			transitionSeg = action.Crossfade([mixOutSeg, mixInSeg], [0.0, 0.0], transition_length, mode="exponential").render()
 			transitionSeg.encode("transition.mp3")
 			#return
 			mainSeg = audio.getpieces(
@@ -162,12 +122,11 @@ def renderList(songList, outFile):
 	#currAudio = audio.assemble([currAudio, mixOutSeg])
 	currAudio.encode(outFile)
 
-
 def main():
 	# First parse our song data
 	with open('songs.json') as data_file:
 		data = json.load(data_file)
-
+	
 	songs = []
 	for song in data:
 		new_song = Song(
@@ -180,23 +139,25 @@ def main():
 			bpm=song['BPM']
 		)
 		songs.append(new_song)
-
+	print "Here"
 	# Determine all pairwise mashabilities, update the dict
 	for song1 in songs:
 		new_dict = {}
 		for song2 in songs:
+			print "Here"
 			if song1 != song2:
 				new_dict[song2] = mashability(song1, song2)
 		MASHABILITY_DICT[song1] = new_dict
 
-	#from csp import genMix
+	from csp import generateMix
 	# Use a CSP to solve generate a list of songs
-	#mixList = genMix(songs, MASHABILITY_DICT)
+	mixList = generateMix(songs, 2, get_mash_pairs(songs), get_unary_list(songs))
 
+	print([song.name for song in mixList])
 	# Actually render the list to a file
 	renderList(mixList, "MixOut.mp3")
 
 if __name__ == "__main__":
-    main()
+	main()
 
 

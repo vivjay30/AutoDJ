@@ -2,9 +2,11 @@ import echonest.remix.audio as audio
 import echonest.remix.action as action
 import echonest.remix.modify as modify
 import dirac
+from pyechonest import config
+config.ECHO_NEST_API_KEY = "O63DZS2LNNEWUO9GC"
 
 #reload(audio)
-audio_file = audio.LocalAudioFile("mp3/Alive.mp3")
+audio_file = audio.LocalAudioFile("mp3/Calibria.mp3")
 
 beats = audio_file.analysis.beats[128:159]
 
@@ -22,7 +24,6 @@ out = audio.assemble(collect, numChannels=2)
 
 audio_file2 = audio.LocalAudioFile("mp3/Bastille.mp3")
 beats2 = audio_file2.analysis.beats[128:159]
-
 
 
 data1 = audio.getpieces(audio_file, beats)

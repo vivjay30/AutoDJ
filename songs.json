@@ -4,25 +4,25 @@
 		"File" : "Alive.mp3",
 		"MixIn" : 224,
 		"MixOut" : 256,
-		"Unary" : 50,
+		"Unary" : 100,
 		"SongId" : 1,
 		"BPM" : 128
 	},
-	{
-		"Name" : "Like a Lie",
-		"File" : "LikeaLie.mp3",
-		"MixIn" : 31,
-		"MixOut" : 95,
-		"Unary" : 75,
+		{
+		"Name" : "Wasted",
+		"File" : "Wasted.mp3",
+		"MixIn" : 96,
+		"MixOut" : 192,
+		"Unary" : 50,
 		"SongId" : 2,
 		"BPM" : 128
 	},
 	{
-		"Name" : "Bastille",
-		"File" : "Bastille.mp3",
-		"MixIn" : 92,
-		"MixOut" : 150,
-		"Unary" : 75,
+		"Name" : "Uptown Funk",
+		"File" : "UptownFunk.mp3",
+		"MixIn" : 64,
+		"MixOut" : 128,
+		"Unary" : 30,
 		"SongId" : 2,
 		"BPM" : 128
 	}
