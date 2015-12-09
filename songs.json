@@ -1,29 +1,38 @@
 [
 	{
-		"Name" : "Alive",
-		"File" : "Alive.mp3",
-		"MixIn" : 224,
-		"MixOut" : 256,
-		"Unary" : 100,
-		"SongId" : 1,
-		"BPM" : 128
-	},
-		{
-		"Name" : "Wasted",
-		"File" : "Wasted.mp3",
-		"MixIn" : 96,
-		"MixOut" : 192,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Name" : "Jealous",
+		"File" : "Jealous.mp3",
+		"MixIn" : 64,
+		"MixOut" : 128,
+		"Unary" : 12,
+		"SongId" : 3,
 		"BPM" : 128
 	},
 	{
-		"Name" : "Uptown Funk",
-		"File" : "UptownFunk.mp3",
-		"MixIn" : 64,
-		"MixOut" : 128,
-		"Unary" : 30,
+		"Name" : "Outside",
+		"File" : "Outside.mp3",
+		"MixIn" : 32,
+		"MixOut" : 96,
+		"Unary" : 50,
 		"SongId" : 2,
-		"BPM" : 128
+		"BPM" : 135
+	},
+	{
+		"Name" : "Crazy in Love",
+		"File" : "Crazy.mp3",
+		"MixIn" : 0,
+		"MixOut" : 64,
+		"Unary" : 50,
+		"SongId" : 2,
+		"BPM" : 99.265
+	},
+	{
+		"Name" : "Safe and Sound",
+		"File" : "SafeSound.mp3",
+		"MixIn" : 31,
+		"MixOut" : 95,
+		"Unary" : 50,
+		"SongId" : 2,
+		"BPM" : 122
 	}
 ]
