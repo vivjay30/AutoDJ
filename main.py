@@ -23,7 +23,7 @@ MIX_LENGTH = 32
 NUM_SONGS = 4
 
 class Song(object):
-	def __init__(self, name, fname, mix_in, mix_out, unary_factor, song_id, bpm):
+	def __init__(self, name, fname, mix_in, mix_out, unary_factor, song_id, bpm, key):
 		self.name = name
 		self.file = fname
 		self.mix_in = mix_in
@@ -31,6 +31,7 @@ class Song(object):
 		self.unary_factor = unary_factor
 		self.song_id = song_id
 		self.bpm = bpm
+		self.key = key
 		print "About to try to load"
 		self.AudioFile = audio.LocalAudioFile("mp3/" + fname)
 		print "Done loading"
@@ -66,8 +67,8 @@ def mashability(song1, song2):
 	chroma1 = librosa.feature.chroma_stft(S=S1, sr=sr1)
 	S2 = np.abs(librosa.stft(y2, n_fft = 4096))
 	chroma2 = librosa.feature.chroma_stft(S=S2, sr=sr2)
-	im = librosa.display.specshow(chroma1,x_axis = "time",y_axis = "chroma")
-	im2 = librosa.display.specshow(chroma2,x_axis = "time",y_axis = "chroma")
+	# im = librosa.display.specshow(chroma1,x_axis = "time",y_axis = "chroma")
+	# im2 = librosa.display.specshow(chroma2,x_axis = "time",y_axis = "chroma")
 	# plt.show()
 	orthogonal_arr = []
 	for i in range(min(chroma1.shape[1],chroma2.shape[1])):
@@ -183,25 +184,18 @@ def main():
 			mix_out=song['MixOut'],
 			unary_factor=song['Unary'],
 			song_id=song['SongId'],
-			bpm=song['BPM']
+			bpm=song['BPM'],
+			key=song['Key']
 		)
 		songs.append(new_song)
-	# Determine all pairwise mashabilities, update the dict
-	# for song1 in songs:
-	# 	new_dict = {}
-	# 	for song2 in songs:
-	# 		# Don't consider songs that differ too greatly 
-	# 		if song1 != song2 and abs(song1.bpm - song2.bpm) < 30:
-	# 			new_dict[song2] = mashability(song1, song2)
-	# 	MASHABILITY_DICT[song1] = new_dict
 
 	from csp import generateMix
+
 	# Use a CSP to solve generate a list of songs
 	mixList = generateMix(songs, NUM_SONGS, get_mash_pairs(songs), get_unary_list(songs))
 
 	#print([song.name for song in mixList])
 	# Actually render the list to a file
-	#renderList(songs, "outfiles/MixOut.mp3")
 	renderList(mixList, "outfiles/MixOut.mp3")
 
 if __name__ == "__main__":
