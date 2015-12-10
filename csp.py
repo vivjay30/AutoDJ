@@ -1,14 +1,15 @@
 from main import Song
 
-# minimum threshold value for unary factor and mashability
-MIX_THRESHOLD = 0.1
-UNARY_THRESHOLD = 0.2
+# threshold values for unary factor and mashability
+# Lower values are stricter cutoffs
+MIX_THRESHOLD = 0.07
+UNARY_THRESHOLD = 0
 
 # returns the next best song in the domain
 def get_best_next_song(mix, domain, mashPairs, unaryVals,v):
 	for i in domain[v]:
 		# if all constraints satisfied return the next song
-		if not(i in mix[:v] or mashPairs[(mix[v-1],i)] < MIX_THRESHOLD or unaryVals[i.song_id] < UNARY_THRESHOLD):
+		if not(i in mix[:v] or mashPairs[(mix[v-1],i)] > MIX_THRESHOLD or unaryVals[i.song_id] < UNARY_THRESHOLD):
 			return i
 	return -1
 

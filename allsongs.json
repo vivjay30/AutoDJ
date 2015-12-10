@@ -1,0 +1,82 @@
+[
+	{
+		"Name" : "Jealous",
+		"File" : "Jealous.mp3",
+		"MixIn" : 64,
+		"MixOut" : 128,
+		"Unary" : 150,
+		"SongId" : 1,
+		"BPM" : 128,
+		"Key" : "f"
+	},
+	{
+		"Name" : "Outside",
+		"File" : "Outside.mp3",
+		"MixIn" : 32,
+		"MixOut" : 96,
+		"Unary" : 130,
+		"SongId" : 2,
+		"BPM" : 135,
+		"Key" : "c#"
+ 	},
+	{
+		"Name" : "Crazy in Love",
+		"File" : "Crazy.mp3",
+		"MixIn" : 0,
+		"MixOut" : 64,
+		"Unary" : 140,
+		"SongId" : 3,
+		"BPM" : 99.265,
+		"Key" : "d"
+	},
+	{
+		"Name" : "Safe and Sound",
+		"File" : "SafeSound.mp3",
+		"MixIn" : 0,
+		"MixOut" : 64,
+		"Unary" : 150,
+		"SongId" : 4,
+		"BPM" : 122,
+		"Key" : "C"
+	},
+	{
+		"Name" : "I could be the one",
+		"File" : "TheOne.mp3",
+		"MixIn" : 352,
+		"MixOut" : 416,
+		"Unary" : 250,
+		"SongId" : 5,
+		"BPM" : 128,
+		"Key" : "A"
+	},
+	{
+		"Name" : "Wasted",
+		"File" : "Wasted.mp3",
+		"MixIn" : 128,
+		"MixOut" : 192,
+		"Unary" : 350,
+		"SongId" : 6,
+		"BPM" : 128,
+		"Key" : "b"
+	},
+	 	{
+		"Name" : "Like a Lie",
+		"File" : "LikeaLie.mp3",
+		"MixIn" : 32,
+		"MixOut" : 96,
+		"Unary" : 110,
+		"SongId" : 7,
+		"BPM" : 128,
+		"Key" : "A"
+	},
+	{
+		"Name" : "Uptown Funk",
+		"File" : "UptownFunk.mp3",
+		"MixIn" : 64,
+		"MixOut" : 128,
+		"Unary" : 430,
+		"SongId" : 8,
+		"BPM" : 128,
+		"Key" : "F"
+	}
+]
