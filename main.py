@@ -43,8 +43,9 @@ def get_mash_pairs(songs):
 	mash_dict = {}
 	for song1 in songs:
 		for song2 in songs:
-			if song1 != song2 and abs(song1.bpm - song2.bpm) < 30:
+			if song1 != song2:
 				mash_dict[(song1, song2)] = mashability(song1, song2)
+	MASHABILITY_DICT = mash_dict
 	print mash_dict
 	return mash_dict
 
@@ -54,6 +55,9 @@ def mashability(song1, song2):
 	Returns how well song1 transitions into song2 using cosine matrix similarity
 	and FFT semitone bin approximation matrices
 	"""
+	# If the tempo differs by more than thirty then we should never make that transition
+	if abs(song1.bpm - song2.bpm) > 30:
+		return 1
 	sample_length = MIX_LENGTH #beats per sample
 	beats1 = song1.AudioFile.analysis.beats[song1.mix_out:song1.mix_out + sample_length]
 	beats2 = song2.AudioFile.analysis.beats[song1.mix_in:song1.mix_in + sample_length]
@@ -103,10 +107,10 @@ def makeTransition(inData, outData, inSong, outSong):
 			outSong.AudioFile,
 			outData
 		)
-		mixInSeg.encode("outfiles/Mixinseg.mp3")
-		mixOutSeg.encode("outfiles/MixOutseg.mp3")
+		# mixInSeg.encode("outfiles/Mixinseg.mp3")
+		# mixOutSeg.encode("outfiles/MixOutseg.mp3")
 		transition_length = 60.0/128.0 * MIX_LENGTH 
-		transitionSeg = action.Crossfade([mixOutSeg, mixInSeg], [0.0, 0.0], transition_length, mode="exponential").render()
+		transitionSeg = action.Crossfade([mixOutSeg, mixInSeg], [0.0, 0.0], transition_length, mode="linear").render()
 		return transitionSeg
 
 	# Else we iterate over each one
@@ -133,8 +137,8 @@ def makeTransition(inData, outData, inSong, outSong):
 		# Collect the audio and crossfade it
 		mixInSeg = audio.assemble(inCollect, numChannels=2)
 		mixOutSeg = audio.assemble(outCollect, numChannels=2)
-		mixInSeg.encode("outfiles/Mixinseg.mp3")
-		mixOutSeg.encode("outfiles/MixOutseg.mp3")
+		# mixInSeg.encode("outfiles/Mixinseg.mp3")
+		# mixOutSeg.encode("outfiles/MixOutseg.mp3")
 		transitionSeg = action.Crossfade([mixOutSeg, mixInSeg], [0.0, 0.0], transitionTime, mode="exponential").render()
 		return transitionSeg
 
@@ -174,6 +178,10 @@ def main():
 	# First parse our song data
 	with open('songs.json') as data_file:
 		data = json.load(data_file)
+
+	if NUM_SONGS > len(data):
+		print "You are trying to make a mix of more songs than present in your library"
+		return 
 	
 	songs = []
 	for song in data:
@@ -192,9 +200,15 @@ def main():
 	from csp import generateMix
 
 	# Use a CSP to solve generate a list of songs
-	mixList = generateMix(songs, NUM_SONGS, get_mash_pairs(songs), get_unary_list(songs))
+	MASHABILITY_DICT = get_mash_pairs(songs)
+	mixList = generateMix(songs, NUM_SONGS, MASHABILITY_DICT, get_unary_list(songs))
 
-	#print([song.name for song in mixList])
+	if not mixList:
+		print "No good mix could be made with those songs"
+		return 
+	for i in range(NUM_SONGS-1):
+		print mixList[i].name + "->" + mixList[i+1].name + ": " + str(MASHABILITY_DICT[(mixList[i], mixList[i+1])])
+	print([song.name for song in mixList])
 	# Actually render the list to a file
 	renderList(mixList, "outfiles/MixOut.mp3")
 

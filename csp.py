@@ -1,7 +1,8 @@
 from main import Song
 
-# minimum threshold value for unary factor and mashability
-MIX_THRESHOLD = 0.08
+# threshold values for unary factor and mashability
+# Lower values are stricter cutoffs
+MIX_THRESHOLD = 0.07
 UNARY_THRESHOLD = 0
 
 # returns the next best song in the domain

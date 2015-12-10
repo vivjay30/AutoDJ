@@ -1,10 +1,11 @@
+[
 	{
 		"Name" : "Jealous",
 		"File" : "Jealous.mp3",
 		"MixIn" : 64,
 		"MixOut" : 128,
-		"Unary" : 12,
-		"SongId" : 3,
+		"Unary" : 150,
+		"SongId" : 1,
 		"BPM" : 128,
 		"Key" : "f"
 	},
@@ -13,28 +14,28 @@
 		"File" : "Outside.mp3",
 		"MixIn" : 32,
 		"MixOut" : 96,
-		"Unary" : 50,
+		"Unary" : 130,
 		"SongId" : 2,
 		"BPM" : 135,
-		"Key" : "g#"
+		"Key" : "c#"
  	},
 	{
 		"Name" : "Crazy in Love",
 		"File" : "Crazy.mp3",
 		"MixIn" : 0,
 		"MixOut" : 64,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Unary" : 140,
+		"SongId" : 3,
 		"BPM" : 99.265,
-		"Key" : "g"
+		"Key" : "d"
 	},
 	{
 		"Name" : "Safe and Sound",
 		"File" : "SafeSound.mp3",
 		"MixIn" : 0,
 		"MixOut" : 64,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Unary" : 150,
+		"SongId" : 4,
 		"BPM" : 122,
 		"Key" : "C"
 	},
@@ -43,8 +44,8 @@
 		"File" : "TheOne.mp3",
 		"MixIn" : 352,
 		"MixOut" : 416,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Unary" : 250,
+		"SongId" : 5,
 		"BPM" : 128,
 		"Key" : "A"
 	},
@@ -53,8 +54,8 @@
 		"File" : "Wasted.mp3",
 		"MixIn" : 128,
 		"MixOut" : 192,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Unary" : 350,
+		"SongId" : 6,
 		"BPM" : 128,
 		"Key" : "b"
 	},
@@ -63,8 +64,8 @@
 		"File" : "LikeaLie.mp3",
 		"MixIn" : 32,
 		"MixOut" : 96,
-		"Unary" : 50,
-		"SongId" : 2,
+		"Unary" : 110,
+		"SongId" : 7,
 		"BPM" : 128,
 		"Key" : "A"
 	},
@@ -73,10 +74,9 @@
 		"File" : "UptownFunk.mp3",
 		"MixIn" : 64,
 		"MixOut" : 128,
-		"Unary" : 30,
-		"SongId" : 2,
+		"Unary" : 430,
+		"SongId" : 8,
 		"BPM" : 128,
 		"Key" : "F"
 	}
-
-	{(I could be the one, Wasted): 0.13628913171190984, (Alive, Jealous): 0.062989833938253345, (Wasted, Jealous): 0.042954544503045332, (Jealous, Wasted): 0.091346177888184513, (Uptown Funk, Alive): 0.14182672626657039, (Wasted, I could be the one): 0.048714711141743611, (Alive, Uptown Funk): 0.091314186924140339, (Uptown Funk, I could be the one): 0.035322637272869883, (Alive, I could be the one): 0.07054698233004307, (I could be the one, Alive): 0.1306292711749725, (Jealous, Alive): 0.13172515030246731, (Uptown Funk, Jealous): 0.062817558970880399, (I could be the one, Jealous): 0.1203646476912202, (Alive, Wasted): 0.1216281718132958, (Wasted, Uptown Funk): 0.052439615940313045, (Uptown Funk, Wasted): 0.093676670492733288, (Jealous, Uptown Funk): 0.029994323421050774, (I could be the one, Uptown Funk): 0.14106954398589408, (Jealous, I could be the one): 0.031602012788471807, (Wasted, Alive): 0.090744102822917935}
+]

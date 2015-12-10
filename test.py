@@ -5,6 +5,9 @@ import dirac
 from pyechonest import config
 config.ECHO_NEST_API_KEY = "O63DZS2LNNEWUO9GC"
 
+"""
+This file is useless, just used to try out API calls
+"""
 #reload(audio)
 audio_file = audio.LocalAudioFile("mp3/Calibria.mp3")
 
